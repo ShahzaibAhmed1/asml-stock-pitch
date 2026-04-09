@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="slides-format" content="viewport">
+    <title>ASML Holding NV - Stock Pitch</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@400;600;700&family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <style type="text/tailwindcss">
+        @theme {
+            --color-bg: #0a1628;
+            --color-bg-deep: #060e1a;
+            --color-surface: #132240;
+            --color-text: #e8edf5;
+            --color-text-secondary: #b0bdd0;
+            --color-text-muted: #6b7fa0;
+            --color-accent-1: #4A90C4;
+            --color-accent-2: #C9A84C;
+            --color-accent-3: #2E6B9E;
+            --color-glass-bg: rgba(255,255,255,0.05);
+            --color-glass-border: rgba(255,255,255,0.08);
+            --color-vignette: rgba(0,0,0,0.4);
+            --font-display: 'Cormorant', Georgia, serif;
+            --font-body: 'Manrope', Arial, sans-serif;
+        }
+    </style>
+
+    <style>
+        :root { --color-bg: #0a1628; --color-text: #e8edf5; --glow-color-rgb: 74,144,196; }
+        *, *::before, *::after { box-sizing: border-box; }
+        html, body { background: var(--color-bg); margin: 0; }
+        body { font-family: var(--font-body); color: var(--color-text); overflow: hidden; height: 100vh; width: 100vw; }
+        .deck { width: 100vw; height: 100vh; position: relative; }
+        .slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--color-bg); display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transform: scale(0.95); transition: opacity 0.7s ease, transform 0.7s ease; pointer-events: none; overflow: hidden; }
+        .slide.active { opacity: 1; transform: scale(1); pointer-events: all; }
+        .slide > .content { position: relative; z-index: 2; width: 100%; max-width: 1100px; padding: clamp(1.5rem, 4vw, 4rem); }
+        .nav-controls { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 16px; z-index: 100; background: var(--color-glass-bg); backdrop-filter: blur(10px); padding: 10px 24px; border-radius: 40px; border: 1px solid var(--color-glass-border); }
+        .nav-btn { width: 40px; height: 40px; border: none; background: var(--color-glass-bg); color: var(--color-accent-1); border-radius: 50%; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.3s; }
+        .nav-btn:hover { background: var(--color-glass-border); }
+        .slide-dots { display: flex; gap: 8px; }
+        .slide-dots .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--color-glass-border); cursor: pointer; transition: background 0.3s, transform 0.3s; }
+        .slide-dots .dot.active { background: var(--color-accent-1); transform: scale(1.3); }
+        .slide-counter { font-size: 0.8rem; color: var(--color-text-muted); min-width: 40px; text-align: center; }
+        .reveal { opacity: 0; transform: translateY(20px); }
+        .text-glow { text-shadow: 0 0 20px rgba(var(--glow-color-rgb), 0.5), 0 0 40px rgba(var(--glow-color-rgb), 0.2); }
+        .stat-glow { text-shadow: 0 0 30px rgba(var(--glow-color-rgb), 0.6), 0 0 60px rgba(var(--glow-color-rgb), 0.25); }
+        @keyframes glow-pulse { 0%, 100% { text-shadow: 0 0 20px rgba(var(--glow-color-rgb), 0.5), 0 0 40px rgba(var(--glow-color-rgb), 0.2); } 50% { text-shadow: 0 0 30px rgba(var(--glow-color-rgb), 0.8), 0 0 60px rgba(var(--glow-color-rgb), 0.3); } }
+        .glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
+        @keyframes float-slow { 0% { transform: translate(0, 0) scale(1); } 25% { transform: translate(60px, -50px) scale(1.12); } 50% { transform: translate(-40px, 40px) scale(0.9); } 75% { transform: translate(50px, 20px) scale(1.08); } 100% { transform: translate(0, 0) scale(1); } }
+        @keyframes float-drift { 0% { transform: translate(0, 0) scale(1) rotate(0deg); } 33% { transform: translate(-50px, -60px) scale(1.15) rotate(3deg); } 66% { transform: translate(40px, 30px) scale(0.88) rotate(-2deg); } 100% { transform: translate(0, 0) scale(1) rotate(0deg); } }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        .gradient-mesh { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(80px); animation: float-slow 10s ease-in-out infinite; }
+        .blob:nth-child(2) { animation: float-drift 14s ease-in-out infinite; }
+        .blob:nth-child(3) { animation: float-slow 18s ease-in-out infinite reverse; }
+        .slide::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); background-repeat: repeat; background-size: 256px 256px; opacity: 0.03; mix-blend-mode: overlay; }
+        .slide::after { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(ellipse at center, transparent 50%, var(--color-vignette) 100%); }
+        .bar-chart { display: flex; align-items: flex-end; gap: clamp(0.4rem, 1vw, 0.75rem); height: clamp(120px, 20vh, 200px); }
+        .bar-col { display: flex; flex-direction: column; align-items: center; gap: 0.3rem; flex: 1; }
+        .bar { border-radius: 6px 6px 0 0; width: 100%; }
+        .donut-ring { stroke-dasharray: 251.3; stroke-dashoffset: 251.3; stroke-linecap: round; }
+        .bar-fill { height: 100%; border-radius: 4px; }
+        @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; } }
+
+        /* Section tag styling */
+        .section-tag { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--color-accent-2); font-weight: 600; }
+
+        /* Table styling */
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.7rem; }
+        .data-table th { background: rgba(74,144,196,0.15); color: var(--color-accent-1); font-weight: 700; padding: 6px 8px; text-align: center; border-bottom: 1px solid rgba(74,144,196,0.2); font-size: 0.65rem; }
+        .data-table td { padding: 4px 8px; border-bottom: 1px solid rgba(255,255,255,0.04); text-align: center; }
+        .data-table td:first-child { text-align: left; font-weight: 600; }
+        .data-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+        .data-table .margin-row td { color: var(--color-accent-1); font-style: italic; font-size: 0.63rem; }
+        .data-table .highlight-row td { background: rgba(74,144,196,0.08); font-weight: 700; color: var(--color-accent-1); }
+        .data-table .estimate-col { background: rgba(201,168,76,0.06); }
+        .data-table .spacer-row td { padding: 2px; border: none; }
+
+        /* Sensitivity table */
+        .sens-table { width: 100%; border-collapse: collapse; font-size: 0.7rem; }
+        .sens-table th { background: rgba(74,144,196,0.15); color: var(--color-accent-1); font-weight: 700; padding: 5px 8px; text-align: center; font-size: 0.65rem; }
+        .sens-table td { padding: 5px 8px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.04); }
+        .sens-table td:first-child { font-weight: 700; color: var(--color-accent-1); }
+        .sens-table .base-cell { background: rgba(74,144,196,0.2); font-weight: 800; color: var(--color-accent-1); border-radius: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="mouse-spotlight" style="position:fixed;inset:0;z-index:99;pointer-events:none;"></div>
+
+<div class="deck">
+
+    <!-- SLIDE 1: TITLE -->
+    <div class="slide slide-1 active" data-slide="1">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 500px; height: 500px; top: -100px; right: -100px; background: var(--color-accent-1); opacity: 0.12;"></div>
+            <div class="blob" style="width: 350px; height: 350px; bottom: -80px; left: -60px; background: var(--color-accent-2); opacity: 0.10;"></div>
+            <div class="blob" style="width: 250px; height: 250px; top: 40%; left: 15%; background: var(--color-accent-3); opacity: 0.08;"></div>
+        </div>
+        <canvas class="particle-canvas" style="position: absolute; inset: 0; z-index: 1;"></canvas>
+        <div class="content text-center">
+            <p class="text-text-muted text-xs tracking-[0.15em] uppercase mb-8 reveal">Private and Confidential</p>
+            <div class="text-[80px] mb-4 animate-[float_3s_ease-in-out_infinite]">🔬</div>
+            <h1 class="font-display text-[clamp(2.5rem,6vw,4.5rem)] font-bold bg-linear-to-br from-accent-1 via-accent-2 to-accent-1 bg-clip-text text-transparent tracking-tight mb-4 reveal">ASML Holding NV</h1>
+            <p class="text-[clamp(0.85rem,1.3vw,1.2rem)] font-light text-text-muted tracking-[6px] uppercase mb-6 reveal">"The Monopoly Behind Every Advanced Chip"</p>
+            <p class="text-text-muted text-sm reveal">April 2026</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 2: CONTENTS -->
+    <div class="slide slide-2" data-slide="2">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 400px; height: 400px; top: -60px; right: -80px; background: var(--color-accent-3); opacity: 0.08;"></div>
+            <div class="blob" style="width: 300px; height: 300px; bottom: -50px; left: -40px; background: var(--color-accent-1); opacity: 0.06;"></div>
+        </div>
+        <canvas class="particle-canvas-ambient" style="position: absolute; inset: 0; z-index: 1;"></canvas>
+        <div class="content">
+            <p class="section-tag mb-2 reveal">Overview</p>
+            <h2 class="font-display text-[clamp(2rem,4vw,3rem)] font-bold text-text mb-10 reveal">Contents</h2>
+            <div class="grid grid-cols-2 gap-6">
+                <div class="space-y-4">
+                    <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-5 hover:-translate-y-1 hover:shadow-xl transition reveal">
+                        <span class="text-accent-2 font-bold text-xs">#1</span>
+                        <h3 class="font-display text-lg font-bold text-text mt-1">Company Overview</h3>
+                        <p class="text-text-muted text-xs mt-1">Sole Manufacturer of EUV Lithography Systems</p>
+                    </div>
+                    <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-5 hover:-translate-y-1 hover:shadow-xl transition reveal">
+                        <span class="text-accent-2 font-bold text-xs">#2</span>
+                        <h3 class="font-display text-lg font-bold text-text mt-1">Market Overview</h3>
+                        <p class="text-text-muted text-xs mt-1">AI and Node Migration Drive Structural Demand</p>
+                    </div>
+                    <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-5 hover:-translate-y-1 hover:shadow-xl transition reveal">
+                        <span class="text-accent-2 font-bold text-xs">#3</span>
+                        <h3 class="font-display text-lg font-bold text-text mt-1">Financials and Estimates</h3>
+                        <p class="text-text-muted text-xs mt-1">Historical Analysis and Forecasts</p>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-5 hover:-translate-y-1 hover:shadow-xl transition reveal">
+                        <span class="text-accent-2 font-bold text-xs">#4</span>
+                        <h3 class="font-display text-lg font-bold text-text mt-1">Valuation and Recommendation</h3>
+                        <p class="text-text-muted text-xs mt-1">Valuation and Concluding Thoughts</p>
+                    </div>
+                    <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-5 hover:-translate-y-1 hover:shadow-xl transition reveal">
+                        <span class="text-accent-2 font-bold text-xs">#5</span>
+                        <h3 class="font-display text-lg font-bold text-text mt-1">DCF Analysis</h3>
+                        <p class="text-text-muted text-xs mt-1">Discounted Cash Flow Model</p>
+                    </div>
+                    <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-5 hover:-translate-y-1 hover:shadow-xl transition reveal">
+                        <span class="text-accent-2 font-bold text-xs">#6</span>
+                        <h3 class="font-display text-lg font-bold text-text mt-1">Appendix</h3>
+                        <p class="text-text-muted text-xs mt-1">Key Risks</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 3: COMPANY OVERVIEW -->
+    <div class="slide slide-3" data-slide="3">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 350px; height: 350px; top: -80px; right: -80px; background: var(--color-accent-1); opacity: 0.07;"></div>
+            <div class="blob" style="width: 250px; height: 250px; bottom: -60px; left: -40px; background: var(--color-accent-2); opacity: 0.05;"></div>
+        </div>
+        <div class="content">
+            <p class="section-tag mb-1 reveal">#1 Company Overview</p>
+            <h2 class="font-display text-[clamp(1.6rem,3.5vw,2.4rem)] font-bold text-text mb-3 reveal">Sole Manufacturer of EUV Lithography</h2>
+            <div class="border-l-4 border-accent-1 bg-glass-bg backdrop-blur-xl rounded-r-lg p-3 mb-4 reveal">
+                <p class="text-text-secondary text-xs leading-relaxed">ASML designs and manufactures photolithography machines used by chipmakers to print circuit patterns onto silicon wafers. With <b class="text-accent-1">100% EUV market share</b>, the company is the essential infrastructure provider for the AI semiconductor revolution.</p>
+            </div>
+            <div class="grid grid-cols-3 gap-4">
+                <!-- Left: Snapshot -->
+                <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-4 reveal">
+                    <h3 class="text-accent-2 text-xs font-bold uppercase tracking-wider mb-3">Company Snapshot</h3>
+                    <div class="space-y-1.5 text-xs">
+                        <div class="flex justify-between"><span class="text-text-muted">Sector</span><span class="text-text font-semibold">Semiconductors</span></div>
+                        <div class="flex justify-between"><span class="text-text-muted">HQ</span><span class="text-text font-semibold">Veldhoven, NL</span></div>
+                        <div class="flex justify-between"><span class="text-text-muted">Founded</span><span class="text-text font-semibold">1984</span></div>
+                        <div class="flex justify-between"><span class="text-text-muted">Employees</span><span class="text-text font-semibold">~44,000</span></div>
+                        <div class="flex justify-between"><span class="text-text-muted">Market Cap</span><span class="text-text font-semibold">~EUR 565B</span></div>
+                        <div class="flex justify-between"><span class="text-text-muted">Ticker</span><span class="text-text font-semibold">ASML</span></div>
+                        <div class="flex justify-between"><span class="text-text-muted">CEO</span><span class="text-text font-semibold">C. Fouquet</span></div>
+                    </div>
+                    <div class="flex gap-1.5 mt-3">
+                        <span class="bg-accent-3 text-white text-[0.55rem] px-2 py-0.5 rounded font-bold">EUV</span>
+                        <span class="bg-accent-1 text-white text-[0.55rem] px-2 py-0.5 rounded font-bold">High-NA</span>
+                        <span class="bg-accent-2/60 text-white text-[0.55rem] px-2 py-0.5 rounded font-bold">DUV</span>
+                        <span class="bg-text-muted/40 text-white text-[0.55rem] px-2 py-0.5 rounded font-bold">IBM</span>
+                    </div>
+                </div>
+                <!-- Middle: Competitive + Revenue chart -->
+                <div class="space-y-3">
+                    <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-4 reveal">
+                        <h3 class="text-accent-2 text-xs font-bold uppercase tracking-wider mb-2">Competitive Moat</h3>
+                        <ul class="text-xs text-text-secondary space-y-1.5">
+                            <li>100% EUV market share, zero alternatives</li>
+                            <li>EUR 200M+ per system, 100K+ components</li>
+                            <li>~90% total litho share; Nikon only in DUV</li>
+                        </ul>
+                    </div>
+                    <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-4 reveal">
+                        <h3 class="text-accent-2 text-xs font-bold uppercase tracking-wider mb-2">Revenue (EUR B)</h3>
+                        <div class="bar-chart" style="height: 110px;">
+                            <div class="bar-col"><span class="text-[0.55rem] text-accent-1 font-bold">18.6</span><div class="bar bg-linear-to-t from-accent-3 to-accent-1" data-height="42" style="height:0%"></div><span class="text-[0.5rem] text-text-muted">21</span></div>
+                            <div class="bar-col"><span class="text-[0.55rem] text-accent-1 font-bold">21.2</span><div class="bar bg-linear-to-t from-accent-3 to-accent-1" data-height="48" style="height:0%"></div><span class="text-[0.5rem] text-text-muted">22</span></div>
+                            <div class="bar-col"><span class="text-[0.55rem] text-accent-1 font-bold">27.6</span><div class="bar bg-linear-to-t from-accent-3 to-accent-1" data-height="62" style="height:0%"></div><span class="text-[0.5rem] text-text-muted">23</span></div>
+                            <div class="bar-col"><span class="text-[0.55rem] text-accent-1 font-bold">28.3</span><div class="bar bg-linear-to-t from-accent-3 to-accent-1" data-height="64" style="height:0%"></div><span class="text-[0.5rem] text-text-muted">24</span></div>
+                            <div class="bar-col"><span class="text-[0.55rem] text-accent-1 font-bold">32.7</span><div class="bar bg-linear-to-t from-accent-3 to-accent-1" data-height="74" style="height:0%"></div><span class="text-[0.5rem] text-text-muted">25</span></div>
+                            <div class="bar-col"><span class="text-[0.55rem] text-accent-2 font-bold">37.5</span><div class="bar bg-linear-to-t from-accent-2/60 to-accent-2" data-height="85" style="height:0%"></div><span class="text-[0.5rem] text-text-muted">26E</span></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right: Customers + Profitability -->
+                <div class="space-y-3">
+                    <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-4 reveal">
+                        <h3 class="text-accent-2 text-xs font-bold uppercase tracking-wider mb-2">Key Customers</h3>
+                        <div class="space-y-1.5 text-xs">
+                            <div><span class="text-accent-1 font-bold">TSMC:</span> <span class="text-text-secondary">~35% of revenue</span></div>
+                            <div><span class="text-accent-1 font-bold">Samsung:</span> <span class="text-text-secondary">~20% of revenue</span></div>
+                            <div><span class="text-accent-1 font-bold">Intel:</span> <span class="text-text-secondary">~15% of revenue</span></div>
+                            <div><span class="text-accent-1 font-bold">SK Hynix:</span> <span class="text-text-secondary">Growing EUV adoption</span></div>
+                        </div>
+                    </div>
+                    <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-4 reveal">
+                        <h3 class="text-accent-2 text-xs font-bold uppercase tracking-wider mb-2">Profitability (FY2025)</h3>
+                        <div class="space-y-1 text-xs">
+                            <div class="flex justify-between"><span class="text-text-muted">Gross Margin</span><span class="text-accent-1 font-bold">52.8%</span></div>
+                            <div class="flex justify-between"><span class="text-text-muted">EBIT Margin</span><span class="text-accent-1 font-bold">34.6%</span></div>
+                            <div class="flex justify-between"><span class="text-text-muted">Net Margin</span><span class="text-accent-1 font-bold">29.4%</span></div>
+                            <div class="flex justify-between"><span class="text-text-muted">ROE</span><span class="text-accent-1 font-bold">~49%</span></div>
+                            <div class="flex justify-between"><span class="text-text-muted">Debt/Equity</span><span class="text-accent-1 font-bold">0.14x</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="text-[0.55rem] text-text-muted mt-3 reveal">Sources: Company Financial Reports, Bloomberg, Annual Report 2025</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 4: MARKET OVERVIEW -->
+    <div class="slide slide-4" data-slide="4">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 350px; height: 350px; top: -80px; left: -80px; background: var(--color-accent-2); opacity: 0.07;"></div>
+            <div class="blob" style="width: 250px; height: 250px; bottom: -60px; right: -40px; background: var(--color-accent-1); opacity: 0.06;"></div>
+        </div>
+        <div class="content">
+            <p class="section-tag mb-1 reveal">#2 Market Overview</p>
+            <h2 class="font-display text-[clamp(1.6rem,3.5vw,2.4rem)] font-bold text-text mb-4 reveal">AI and Node Migration Drive Structural Demand</h2>
+            <div class="grid grid-cols-3 gap-4">
+                <!-- Left: TAM + Drivers -->
+                <div class="space-y-3">
+                    <div class="grid grid-cols-2 gap-2 reveal">
+                        <div class="bg-accent-3 rounded-xl p-3 text-center"><p class="text-xl font-bold text-white stat-glow" data-count="1000" data-prefix="$" data-suffix="T+">$1T+</p><p class="text-[0.55rem] text-white/80">Global Semi 2030</p></div>
+                        <div class="bg-accent-1 rounded-xl p-3 text-center"><p class="text-xl font-bold text-white stat-glow">$20.6B</p><p class="text-[0.55rem] text-white/80">EUV Market (13.2% CAGR)</p></div>
+                    </div>
+                    <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-4 reveal">
+                        <h3 class="text-accent-2 text-xs font-bold uppercase tracking-wider mb-2">Demand Drivers</h3>
+                        <ul class="text-xs text-text-secondary space-y-2">
+                            <li><b class="text-accent-1">Generative AI:</b> All advanced AI chips require ASML EUV equipment</li>
+                            <li><b class="text-accent-1">Fab expansion:</b> $500B+ committed in new fab construction through 2030</li>
+                            <li><b class="text-accent-1">Node migration:</b> 2nm and 1.4nm require more EUV + High-NA layers</li>
+                            <li><b class="text-accent-1">DRAM upgrade:</b> SK Hynix and Samsung adopting EUV for HBM4</li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- Middle: SWOT -->
+                <div class="space-y-2 reveal">
+                    <h3 class="text-accent-2 text-xs font-bold uppercase tracking-wider mb-1">SWOT Analysis</h3>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="border-t-2 border-accent-1 bg-glass-bg rounded-lg p-3"><p class="text-accent-1 text-[0.6rem] font-bold mb-1">Strengths</p><p class="text-[0.6rem] text-text-secondary">100% EUV monopoly. Recurring service revenue. EUR 38.8B backlog.</p></div>
+                        <div class="border-t-2 border-accent-2 bg-glass-bg rounded-lg p-3"><p class="text-accent-2 text-[0.6rem] font-bold mb-1">Weaknesses</p><p class="text-[0.6rem] text-text-secondary">Customer concentration (TSMC ~35%). Geopolitical exposure. Long lead times.</p></div>
+                        <div class="border-t-2 border-green-500 bg-glass-bg rounded-lg p-3"><p class="text-green-400 text-[0.6rem] font-bold mb-1">Opportunities</p><p class="text-[0.6rem] text-text-secondary">High-NA EUV at EUR 350M/unit. AI capex supercycle. Expanding installed base.</p></div>
+                        <div class="border-t-2 border-red-500 bg-glass-bg rounded-lg p-3"><p class="text-red-400 text-[0.6rem] font-bold mb-1">Threats</p><p class="text-[0.6rem] text-text-secondary">China export restrictions. Rare earth supply disruption. Semi cycle downturn.</p></div>
+                    </div>
+                </div>
+                <!-- Right: Backlog + Targets + Catalysts -->
+                <div class="space-y-3">
+                    <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-4 reveal">
+                        <h3 class="text-accent-2 text-xs font-bold uppercase tracking-wider mb-2">Backlog (EUR 38.8B)</h3>
+                        <div class="flex items-center gap-3">
+                            <svg viewBox="0 0 100 100" width="80" height="80">
+                                <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="12"/>
+                                <circle class="donut-ring" cx="50" cy="50" r="40" fill="none" stroke="var(--color-accent-3)" stroke-width="12" data-percent="66" transform="rotate(-90 50 50)"/>
+                                <circle class="donut-ring" cx="50" cy="50" r="40" fill="none" stroke="var(--color-accent-1)" stroke-width="12" data-percent="22" transform="rotate(-90 50 50)" stroke-dashoffset="85.4"/>
+                                <text x="50" y="53" text-anchor="middle" fill="var(--color-text)" font-size="11" font-weight="bold">38.8B</text>
+                            </svg>
+                            <div class="text-[0.6rem] space-y-1">
+                                <div class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-accent-3"></span> EUV 66%</div>
+                                <div class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-accent-1"></span> DUV 22%</div>
+                                <div class="flex items-center gap-1"><span class="w-2 h-2 rounded bg-text-muted"></span> Services 12%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 reveal">
+                        <div class="bg-glass-bg rounded-lg p-2 text-center"><p class="text-accent-1 font-bold text-sm">EUR 44-60B</p><p class="text-[0.5rem] text-text-muted">2030 Revenue</p></div>
+                        <div class="bg-glass-bg rounded-lg p-2 text-center"><p class="text-accent-2 font-bold text-sm">56-60%</p><p class="text-[0.5rem] text-text-muted">2030 GM</p></div>
+                        <div class="bg-glass-bg rounded-lg p-2 text-center"><p class="text-accent-3 font-bold text-sm">12-17%</p><p class="text-[0.5rem] text-text-muted">Rev CAGR</p></div>
+                    </div>
+                    <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-3 reveal">
+                        <h3 class="text-accent-2 text-[0.6rem] font-bold uppercase tracking-wider mb-2">Near-term Catalysts</h3>
+                        <div class="space-y-1.5 text-[0.6rem]">
+                            <div class="flex gap-2"><span class="bg-accent-3 text-white px-1.5 py-0.5 rounded text-[0.5rem] font-bold shrink-0">Q1 26</span><span class="text-text-secondary">High-NA EUV confirmed for mass production</span></div>
+                            <div class="flex gap-2"><span class="bg-accent-1 text-white px-1.5 py-0.5 rounded text-[0.5rem] font-bold shrink-0">2026</span><span class="text-text-secondary">TSMC 2nm fully booked, all EUV</span></div>
+                            <div class="flex gap-2"><span class="bg-accent-2/60 text-white px-1.5 py-0.5 rounded text-[0.5rem] font-bold shrink-0">26-28</span><span class="text-text-secondary">EUR 12B buyback + growing dividend</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="text-[0.55rem] text-text-muted mt-3 reveal">Sources: Company Financial Reports, Bloomberg, Reuters, Forbes, TrendForce</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 5: FINANCIALS -->
+    <div class="slide slide-5" data-slide="5">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 300px; height: 300px; top: -60px; right: -60px; background: var(--color-accent-1); opacity: 0.06;"></div>
+            <div class="blob" style="width: 200px; height: 200px; bottom: -40px; left: -30px; background: var(--color-accent-2); opacity: 0.05;"></div>
+        </div>
+        <div class="content">
+            <p class="section-tag mb-1 reveal">#3 Historical Analysis and Forecasts</p>
+            <h2 class="font-display text-[clamp(1.5rem,3vw,2.2rem)] font-bold text-text mb-2 reveal">Financial Overview</h2>
+            <p class="text-text-muted text-xs mb-3 reveal">Condensed P&L and valuation multiples (EUR millions, except per-share and multiples)</p>
+            <div class="overflow-hidden rounded-xl border border-glass-border reveal" style="max-height: 52vh;">
+                <table class="data-table">
+                    <thead><tr><th style="text-align:left;width:110px"></th><th>2021A</th><th>2022A</th><th>2023A</th><th>2024A</th><th>2025A</th><th class="estimate-col">2026E</th><th class="estimate-col">2027E</th><th class="estimate-col">2028E</th></tr></thead>
+                    <tbody>
+                        <tr><td>Revenue</td><td>18,611</td><td>21,173</td><td>27,559</td><td>28,262</td><td>32,682</td><td class="estimate-col">37,511</td><td class="estimate-col">40,265</td><td class="estimate-col">44,920</td></tr>
+                        <tr class="margin-row"><td>&nbsp;&nbsp;YoY Growth</td><td></td><td>13.8%</td><td>30.2%</td><td>2.6%</td><td>15.6%</td><td class="estimate-col">14.8%</td><td class="estimate-col">7.3%</td><td class="estimate-col">11.6%</td></tr>
+                        <tr><td>COGS</td><td>(9,564)</td><td>(11,238)</td><td>(13,820)</td><td>(13,822)</td><td>(15,413)</td><td class="estimate-col">(17,256)</td><td class="estimate-col">(18,319)</td><td class="estimate-col">(19,706)</td></tr>
+                        <tr><td>Gross Profit</td><td>9,047</td><td>9,935</td><td>13,739</td><td>14,440</td><td>17,269</td><td class="estimate-col">20,255</td><td class="estimate-col">21,946</td><td class="estimate-col">25,214</td></tr>
+                        <tr class="margin-row"><td>&nbsp;&nbsp;Gross Margin</td><td>48.6%</td><td>46.9%</td><td>49.9%</td><td>51.1%</td><td>52.8%</td><td class="estimate-col">54.0%</td><td class="estimate-col">54.5%</td><td class="estimate-col">56.1%</td></tr>
+                        <tr><td>R&D</td><td>(2,548)</td><td>(3,295)</td><td>(3,881)</td><td>(4,359)</td><td>(4,654)</td><td class="estimate-col">(5,252)</td><td class="estimate-col">(5,677)</td><td class="estimate-col">(6,289)</td></tr>
+                        <tr><td>SG&A</td><td>(723)</td><td>(847)</td><td>(984)</td><td>(999)</td><td>(1,276)</td><td class="estimate-col">(1,200)</td><td class="estimate-col">(1,247)</td><td class="estimate-col">(1,370)</td></tr>
+                        <tr class="highlight-row"><td>EBIT</td><td>5,883</td><td>6,012</td><td>9,039</td><td>9,254</td><td>11,305</td><td class="estimate-col">13,803</td><td class="estimate-col">15,022</td><td class="estimate-col">17,555</td></tr>
+                        <tr class="margin-row"><td>&nbsp;&nbsp;EBIT Margin</td><td>31.6%</td><td>28.4%</td><td>32.8%</td><td>32.7%</td><td>34.6%</td><td class="estimate-col">36.8%</td><td class="estimate-col">37.3%</td><td class="estimate-col">39.1%</td></tr>
+                        <tr><td>Net Income</td><td>5,883</td><td>5,624</td><td>7,839</td><td>7,568</td><td>9,616</td><td class="estimate-col">11,698</td><td class="estimate-col">12,770</td><td class="estimate-col">14,970</td></tr>
+                        <tr class="margin-row"><td>&nbsp;&nbsp;Net Margin</td><td>31.6%</td><td>26.6%</td><td>28.4%</td><td>26.8%</td><td>29.4%</td><td class="estimate-col">31.2%</td><td class="estimate-col">31.7%</td><td class="estimate-col">33.3%</td></tr>
+                        <tr><td>EPS (EUR)</td><td>14.36</td><td>14.30</td><td>19.87</td><td>19.25</td><td>24.73</td><td class="estimate-col">30.39</td><td class="estimate-col">33.41</td><td class="estimate-col">39.51</td></tr>
+                        <tr class="spacer-row"><td colspan="9"></td></tr>
+                        <tr><td>EV/Sales</td><td>18.3x</td><td>10.0x</td><td>13.5x</td><td>11.5x</td><td>17.7x</td><td class="estimate-col">15.4x</td><td class="estimate-col">14.4x</td><td class="estimate-col">12.9x</td></tr>
+                        <tr><td>EV/EBIT</td><td>57.9x</td><td>35.2x</td><td>41.2x</td><td>35.1x</td><td>51.2x</td><td class="estimate-col">41.9x</td><td class="estimate-col">38.6x</td><td class="estimate-col">33.0x</td></tr>
+                        <tr><td>P/E</td><td>44.3x</td><td>27.9x</td><td>37.5x</td><td>32.9x</td><td>46.2x</td><td class="estimate-col">38.9x</td><td class="estimate-col">35.5x</td><td class="estimate-col">30.0x</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-3 reveal">
+                <h3 class="text-accent-2 text-xs font-bold uppercase tracking-wider mb-1.5">Key Commentary</h3>
+                <ul class="text-[0.65rem] text-text-secondary space-y-1">
+                    <li>Gross margin expanding toward 54-60% as High-NA EUV commands higher ASPs and EUV mix increases.</li>
+                    <li>R&D intensity at ~14% of revenue reflects ongoing High-NA development.</li>
+                    <li>2024 was a transition year. Revenue re-accelerated in H2 2025 with EUR 9.3B in Q4 alone.</li>
+                    <li>Backlog of EUR 38.8B (66% EUV) provides ~12 months of revenue visibility.</li>
+                    <li>Consensus: ~15% revenue CAGR through 2028, margin expansion driving ~20% EPS CAGR.</li>
+                </ul>
+            </div>
+            <p class="text-[0.55rem] text-text-muted mt-2 reveal">Sources: Company Annual Report 2025, Bloomberg consensus estimates (April 2026)</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 6: VALUATION -->
+    <div class="slide slide-6" data-slide="6">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 350px; height: 350px; top: -80px; right: -80px; background: var(--color-accent-2); opacity: 0.07;"></div>
+            <div class="blob" style="width: 250px; height: 250px; bottom: -60px; left: -40px; background: var(--color-accent-1); opacity: 0.06;"></div>
+        </div>
+        <div class="content">
+            <p class="section-tag mb-1 reveal">#4 Valuation</p>
+            <h2 class="font-display text-[clamp(1.5rem,3vw,2.2rem)] font-bold text-text mb-3 reveal">Valuation and Recommendation</h2>
+            <div class="grid grid-cols-2 gap-4">
+                <!-- Left: Scenarios + Football field -->
+                <div class="space-y-3">
+                    <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-4 reveal">
+                        <h3 class="text-accent-2 text-xs font-bold uppercase tracking-wider mb-2">Scenario Analysis (12-month target)</h3>
+                        <table class="data-table" style="font-size:0.68rem">
+                            <thead><tr><th>Scenario</th><th>P/E</th><th>Target</th><th>Upside</th><th style="text-align:left">Thesis</th></tr></thead>
+                            <tbody>
+                                <tr><td style="color:#ef4444;font-weight:700">Bear</td><td>32x</td><td>$1,248</td><td style="color:#ef4444;font-weight:700">-2%</td><td style="text-align:left">Semi downturn, China escalation</td></tr>
+                                <tr class="highlight-row"><td>Base</td><td>36x</td><td>$1,404</td><td style="font-weight:700">+10%</td><td style="text-align:left">Consensus EPS at 10-yr avg multiple</td></tr>
+                                <tr><td style="color:#22c55e;font-weight:700">Bull</td><td>40x</td><td>$1,560</td><td style="color:#22c55e;font-weight:700">+22%</td><td style="text-align:left">AI supercycle, faster margin expansion</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-4 reveal">
+                        <h3 class="text-accent-2 text-xs font-bold uppercase tracking-wider mb-3">Football Field (USD/share)</h3>
+                        <div class="space-y-3 relative" style="padding-left:70px">
+                            <div class="absolute left-0 top-0 bottom-0 flex flex-col justify-between text-[0.6rem] text-text-muted font-bold" style="width:65px">
+                                <span>P/E</span><span>EV/EBIT</span><span>DCF</span>
+                            </div>
+                            <div class="relative h-5"><div class="absolute bg-accent-1/30 rounded h-full" style="left:12%;right:10%;"></div><div class="absolute bg-accent-1 rounded h-full" style="left:12%;right:10%;opacity:0.6"></div><span class="absolute text-[0.5rem] text-text-muted" style="left:8%;top:-2px">$1,248</span><span class="absolute text-[0.5rem] text-text-muted" style="right:6%;top:-2px">$1,560</span></div>
+                            <div class="relative h-5"><div class="absolute bg-accent-3/30 rounded h-full" style="left:0%;right:25%;"></div><div class="absolute bg-accent-3 rounded h-full" style="left:0%;right:25%;opacity:0.6"></div><span class="absolute text-[0.5rem] text-text-muted" style="left:-4%;top:-2px">$1,200</span><span class="absolute text-[0.5rem] text-text-muted" style="right:21%;top:-2px">$1,500</span></div>
+                            <div class="relative h-5"><div class="absolute bg-accent-2/30 rounded h-full" style="left:25%;right:20%;"></div><div class="absolute bg-accent-2 rounded h-full" style="left:25%;right:20%;opacity:0.6"></div><span class="absolute text-[0.5rem] text-text-muted" style="left:21%;top:-2px">$1,300</span><span class="absolute text-[0.5rem] text-text-muted" style="right:16%;top:-2px">$1,520</span></div>
+                            <div class="absolute top-0 bottom-0 w-0.5 bg-red-500 z-10" style="left:19%"><span class="absolute text-[0.5rem] text-red-400 font-bold whitespace-nowrap" style="bottom:-16px;left:-12px">$1,276</span></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Right: Comps + Recommendation -->
+                <div class="space-y-3">
+                    <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-4 reveal">
+                        <h3 class="text-accent-2 text-xs font-bold uppercase tracking-wider mb-2">Comparative Multiples</h3>
+                        <table class="data-table" style="font-size:0.65rem">
+                            <thead><tr><th style="text-align:left"></th><th>Fwd P/E</th><th>EV/EBIT</th><th>EV/Sales</th><th>GM%</th></tr></thead>
+                            <tbody>
+                                <tr class="highlight-row"><td>ASML</td><td>38.9x</td><td>41.9x</td><td>15.4x</td><td>52.8%</td></tr>
+                                <tr><td>KLAC</td><td>25.1x</td><td>22.4x</td><td>10.7x</td><td>61.2%</td></tr>
+                                <tr><td>LRCX</td><td>22.8x</td><td>20.5x</td><td>7.8x</td><td>48.5%</td></tr>
+                                <tr><td>AMAT</td><td>20.4x</td><td>18.6x</td><td>6.5x</td><td>47.8%</td></tr>
+                                <tr><td>Tokyo Electron</td><td>26.3x</td><td>24.1x</td><td>8.2x</td><td>44.1%</td></tr>
+                                <tr style="border-top:1px solid rgba(74,144,196,0.2)"><td><b>Avg (ex-ASML)</b></td><td><b>23.7x</b></td><td><b>21.4x</b></td><td><b>8.3x</b></td><td><b>50.4%</b></td></tr>
+                                <tr><td style="color:#ef4444"><b>ASML Premium</b></td><td style="color:#ef4444"><b>+64%</b></td><td style="color:#ef4444"><b>+96%</b></td><td style="color:#ef4444"><b>+86%</b></td><td></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="border-l-4 border-accent-2 bg-glass-bg backdrop-blur-xl rounded-r-xl p-4 reveal">
+                        <h3 class="text-accent-2 text-sm font-bold mb-2">Investment Recommendation: BUY, Target $1,400 (+10%)</h3>
+                        <ul class="text-[0.65rem] text-text-secondary space-y-1">
+                            <li>Forward P/E of ~39x vs. 10-year avg 36x. Premium justified by monopoly + AI growth.</li>
+                            <li>100% EUV monopoly: no substitute exists, competitors are 10+ years behind.</li>
+                            <li>Secular AI growth: every AI chip requires EUV. Demand is structural, not cyclical.</li>
+                            <li>Margin expansion: path from 53% to 60% GM driven by High-NA mix shift.</li>
+                            <li>Capital returns: EUR 12.4B returned in FY25. Dividend + buyback yield ~3%.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <p class="text-[0.55rem] text-text-muted mt-2 reveal">Sources: Bloomberg consensus estimates, FactSet, company filings</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 7: DCF -->
+    <div class="slide slide-7" data-slide="7">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 350px; height: 350px; top: -80px; left: -80px; background: var(--color-accent-1); opacity: 0.07;"></div>
+            <div class="blob" style="width: 250px; height: 250px; bottom: -60px; right: -40px; background: var(--color-accent-2); opacity: 0.06;"></div>
+        </div>
+        <div class="content">
+            <p class="section-tag mb-1 reveal">#5 DCF Analysis</p>
+            <h2 class="font-display text-[clamp(1.5rem,3vw,2.2rem)] font-bold text-text mb-1 reveal">Discounted Cash Flow Model</h2>
+            <p class="text-text-muted text-xs mb-3 reveal">Two-stage FCFF model: explicit forecast (2026E-2030E) + terminal value. WACC 8.0%, terminal growth 2.5%.</p>
+            <div class="grid grid-cols-4 gap-3">
+                <!-- Left: Assumptions -->
+                <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-3 reveal">
+                    <h3 class="text-accent-2 text-[0.6rem] font-bold uppercase tracking-wider mb-2">Key Assumptions</h3>
+                    <div class="space-y-1 text-[0.62rem]">
+                        <div class="flex justify-between"><span class="text-text-muted">WACC</span><span class="text-accent-1 font-bold">8.0%</span></div>
+                        <div class="flex justify-between"><span class="text-text-muted">Risk-Free Rate</span><span class="text-text font-semibold">2.8%</span></div>
+                        <div class="flex justify-between"><span class="text-text-muted">Equity Risk Prem.</span><span class="text-text font-semibold">4.2%</span></div>
+                        <div class="flex justify-between"><span class="text-text-muted">Beta</span><span class="text-text font-semibold">1.23</span></div>
+                        <div class="flex justify-between"><span class="text-text-muted">Cost of Equity</span><span class="text-text font-semibold">8.0%</span></div>
+                        <div class="flex justify-between"><span class="text-text-muted">Debt Weight</span><span class="text-text font-semibold">~1%</span></div>
+                        <div class="flex justify-between"><span class="text-text-muted">Terminal Growth</span><span class="text-accent-1 font-bold">2.5%</span></div>
+                        <div class="flex justify-between"><span class="text-text-muted">Tax Rate</span><span class="text-text font-semibold">~18%</span></div>
+                    </div>
+                </div>
+                <!-- Right: FCF table spanning 3 cols -->
+                <div class="col-span-3 space-y-3">
+                    <div class="overflow-hidden rounded-xl border border-glass-border reveal">
+                        <table class="data-table" style="font-size:0.62rem">
+                            <thead><tr><th style="text-align:left;width:100px"></th><th>2026E</th><th>2027E</th><th>2028E</th><th>2029E</th><th>2030E</th><th>Terminal</th></tr></thead>
+                            <tbody>
+                                <tr><td>Revenue</td><td>37,511</td><td>40,265</td><td>44,920</td><td>49,412</td><td>54,353</td><td></td></tr>
+                                <tr class="margin-row"><td>&nbsp;&nbsp;YoY Growth</td><td>14.8%</td><td>7.3%</td><td>11.6%</td><td>10.0%</td><td>10.0%</td><td>2.5%</td></tr>
+                                <tr><td>EBIT</td><td>13,803</td><td>15,022</td><td>17,555</td><td>19,765</td><td>22,286</td><td></td></tr>
+                                <tr class="margin-row"><td>&nbsp;&nbsp;EBIT Margin</td><td>36.8%</td><td>37.3%</td><td>39.1%</td><td>40.0%</td><td>41.0%</td><td></td></tr>
+                                <tr><td>Tax on EBIT</td><td>(2,484)</td><td>(2,704)</td><td>(3,160)</td><td>(3,558)</td><td>(4,011)</td><td></td></tr>
+                                <tr><td>NOPAT</td><td>11,319</td><td>12,318</td><td>14,395</td><td>16,207</td><td>18,275</td><td></td></tr>
+                                <tr><td>D&A</td><td>1,800</td><td>1,950</td><td>2,100</td><td>2,300</td><td>2,500</td><td></td></tr>
+                                <tr><td>CapEx</td><td>(1,800)</td><td>(2,000)</td><td>(2,200)</td><td>(2,400)</td><td>(2,600)</td><td></td></tr>
+                                <tr><td>Change in WC</td><td>(500)</td><td>(400)</td><td>(500)</td><td>(450)</td><td>(500)</td><td></td></tr>
+                                <tr class="highlight-row"><td>FCFF</td><td>10,819</td><td>11,868</td><td>13,795</td><td>15,657</td><td>17,675</td><td>329,545</td></tr>
+                                <tr><td>Discount Factor</td><td>0.926</td><td>0.857</td><td>0.794</td><td>0.735</td><td>0.681</td><td>0.681</td></tr>
+                                <tr class="highlight-row"><td>PV of FCFF</td><td>10,019</td><td>10,175</td><td>10,953</td><td>11,510</td><td>12,030</td><td>224,340</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Bottom: Bridge + Sensitivity -->
+            <div class="grid grid-cols-2 gap-4 mt-3">
+                <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-3 reveal">
+                    <h3 class="text-accent-2 text-[0.6rem] font-bold uppercase tracking-wider mb-2">Valuation Bridge</h3>
+                    <div class="space-y-1 text-[0.65rem]">
+                        <div class="flex justify-between"><span class="text-text-secondary">PV of Explicit FCFs (2026E-2030E)</span><span class="text-text font-semibold">EUR 54,687M</span></div>
+                        <div class="flex justify-between"><span class="text-text-secondary">PV of Terminal Value</span><span class="text-text font-semibold">EUR 224,340M</span></div>
+                        <div class="flex justify-between border-t border-glass-border pt-1"><span class="text-accent-1 font-bold">Enterprise Value</span><span class="text-accent-1 font-bold">EUR 279,027M</span></div>
+                        <div class="flex justify-between"><span class="text-text-secondary">Less: Net Debt</span><span class="text-text font-semibold">(EUR 3,200M)</span></div>
+                        <div class="flex justify-between border-t border-glass-border pt-1"><span class="text-accent-1 font-bold">Equity Value</span><span class="text-accent-1 font-bold">EUR 282,227M</span></div>
+                        <div class="flex justify-between"><span class="text-text-secondary">Shares Outstanding</span><span class="text-text font-semibold">~388M</span></div>
+                        <div class="flex justify-between border-t border-accent-2/30 pt-1"><span class="text-accent-2 font-bold">Implied Price/Share</span><span class="text-accent-2 font-bold stat-glow">EUR 727 / ~$793</span></div>
+                    </div>
+                </div>
+                <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-3 reveal">
+                    <h3 class="text-accent-2 text-[0.6rem] font-bold uppercase tracking-wider mb-2">Sensitivity: Implied Share Price (EUR) by WACC / Terminal Growth</h3>
+                    <table class="sens-table">
+                        <thead><tr><th>WACC \ g</th><th>1.5%</th><th>2.0%</th><th>2.5%</th><th>3.0%</th><th>3.5%</th></tr></thead>
+                        <tbody>
+                            <tr><td>7.0%</td><td>862</td><td>942</td><td>1,044</td><td>1,179</td><td>1,363</td></tr>
+                            <tr><td>7.5%</td><td>776</td><td>839</td><td>918</td><td>1,017</td><td>1,146</td></tr>
+                            <tr><td>8.0%</td><td>703</td><td>754</td><td class="base-cell">816</td><td>893</td><td>988</td></tr>
+                            <tr><td>8.5%</td><td>640</td><td>682</td><td>732</td><td>793</td><td>868</td></tr>
+                            <tr><td>9.0%</td><td>585</td><td>620</td><td>661</td><td>710</td><td>770</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <p class="text-[0.55rem] text-text-muted mt-2 reveal">Sources: Company filings, Bloomberg, Alpha Spread. Terminal value = FCFF(2030) x (1+g) / (WACC-g).</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 8: KEY RISKS -->
+    <div class="slide slide-8" data-slide="8">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 300px; height: 300px; top: -60px; right: -60px; background: var(--color-accent-1); opacity: 0.06;"></div>
+            <div class="blob" style="width: 200px; height: 200px; bottom: -40px; left: -30px; background: #ef4444; opacity: 0.04;"></div>
+        </div>
+        <div class="content">
+            <p class="section-tag mb-1 reveal">#6 Appendix</p>
+            <h2 class="font-display text-[clamp(1.5rem,3vw,2.2rem)] font-bold text-text mb-4 reveal">Key Risks</h2>
+            <div class="space-y-2.5">
+                <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-4 border-l-4 border-l-red-500 hover:-translate-y-0.5 transition reveal">
+                    <div class="flex items-center gap-2 mb-1"><h3 class="text-text font-bold text-sm">China Export Controls</h3><span class="bg-red-500 text-white text-[0.5rem] px-2 py-0.5 rounded font-bold">HIGH</span></div>
+                    <p class="text-text-secondary text-xs">Tightening US/EU restrictions could eliminate ~15-20% of ASML revenue. DUV export bans expanded in 2024. Further restrictions on servicing existing Chinese tools represent incremental risk.</p>
+                    <p class="text-text-muted text-[0.6rem] mt-1"><b class="text-accent-1">Impact:</b> Revenue decline of EUR 5-6B; partially offset by reallocation to other fabs</p>
+                </div>
+                <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-4 border-l-4 border-l-amber-500 hover:-translate-y-0.5 transition reveal">
+                    <div class="flex items-center gap-2 mb-1"><h3 class="text-text font-bold text-sm">Semiconductor Cycle Downturn</h3><span class="bg-amber-500 text-white text-[0.5rem] px-2 py-0.5 rounded font-bold">MEDIUM</span></div>
+                    <p class="text-text-secondary text-xs">Despite structural demand, the chip industry remains cyclical. An inventory correction could defer EUV orders. EUR 38.8B backlog provides ~12 months buffer.</p>
+                    <p class="text-text-muted text-[0.6rem] mt-1"><b class="text-accent-1">Impact:</b> 15-20% revenue decline; margins compress 200-300bps</p>
+                </div>
+                <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-4 border-l-4 border-l-amber-500 hover:-translate-y-0.5 transition reveal">
+                    <div class="flex items-center gap-2 mb-1"><h3 class="text-text font-bold text-sm">Valuation Premium Compression</h3><span class="bg-amber-500 text-white text-[0.5rem] px-2 py-0.5 rounded font-bold">MEDIUM</span></div>
+                    <p class="text-text-secondary text-xs">At ~39x forward P/E versus peer avg of ~24x, any disappointment in growth or margins could trigger multiple contraction. Reversion to 30x P/E implies ~20% downside.</p>
+                    <p class="text-text-muted text-[0.6rem] mt-1"><b class="text-accent-1">Impact:</b> Stock repricing to $1,000-$1,100 range</p>
+                </div>
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-3 border-l-4 border-l-amber-500 hover:-translate-y-0.5 transition reveal">
+                        <div class="flex items-center gap-2 mb-1"><h3 class="text-text font-bold text-xs">Rare Earth Supply Disruption</h3><span class="bg-amber-500 text-white text-[0.45rem] px-1.5 py-0.5 rounded font-bold">MEDIUM</span></div>
+                        <p class="text-text-secondary text-[0.6rem]">China controls ~60% of rare earth processing. Supply chain disruption could delay shipments.</p>
+                    </div>
+                    <div class="bg-glass-bg backdrop-blur-xl border border-glass-border rounded-xl p-3 border-l-4 border-l-green-500 hover:-translate-y-0.5 transition reveal">
+                        <div class="flex items-center gap-2 mb-1"><h3 class="text-text font-bold text-xs">Technology Disruption Risk</h3><span class="bg-green-500 text-white text-[0.45rem] px-1.5 py-0.5 rounded font-bold">LOW</span></div>
+                        <p class="text-text-secondary text-[0.6rem]">No viable EUV alternative exists within a 10-year horizon. Minimal near-term impact.</p>
+                    </div>
+                </div>
+            </div>
+            <p class="text-[0.55rem] text-text-muted mt-2 reveal">Sources: US Bureau of Industry and Security, ASML Annual Report 2025, analyst commentary</p>
+        </div>
+    </div>
+
+    <!-- SLIDE 9: THANK YOU -->
+    <div class="slide slide-9" data-slide="9">
+        <div class="gradient-mesh">
+            <div class="blob" style="width: 500px; height: 500px; top: -100px; right: -100px; background: var(--color-accent-1); opacity: 0.15;"></div>
+            <div class="blob" style="width: 350px; height: 350px; bottom: -80px; left: -60px; background: var(--color-accent-2); opacity: 0.12;"></div>
+            <div class="blob" style="width: 200px; height: 200px; top: 40%; left: 20%; background: var(--color-accent-3); opacity: 0.10;"></div>
+        </div>
+        <canvas class="particle-canvas" style="position: absolute; inset: 0; z-index: 1;"></canvas>
+        <div class="content text-center">
+            <div class="text-[80px] mb-4 animate-[float_3s_ease-in-out_infinite] reveal">🔬</div>
+            <h2 class="font-display text-[clamp(2.5rem,6vw,4.5rem)] font-bold bg-linear-to-br from-accent-1 via-accent-2 to-accent-1 bg-clip-text text-transparent tracking-tight mb-4 reveal">Thank You</h2>
+            <p class="text-[clamp(0.8rem,1.2vw,1rem)] text-text-muted tracking-[6px] uppercase mb-8 reveal">ASML HOLDING NV  /  STOCK PITCH  /  APRIL 2026</p>
+            <p class="text-text-muted text-xs max-w-xl mx-auto reveal" style="font-style:italic">This presentation is for informational purposes only and does not constitute investment advice. All estimates are based on publicly available data and consensus forecasts as of April 2026.</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- NAVIGATION -->
+<div class="nav-controls">
+    <button class="nav-btn" onclick="changeSlide(-1)">&#8249;</button>
+    <div class="slide-dots" id="dots"></div>
+    <button class="nav-btn" onclick="changeSlide(1)">&#8250;</button>
+    <span class="slide-counter" id="counter">1 / 9</span>
+</div>
+
+<script>
+    let current = 1;
+    const total = document.querySelectorAll('.slide').length;
+    const dotsContainer = document.getElementById('dots');
+    const counter = document.getElementById('counter');
+    for (let i = 1; i <= total; i++) { const dot = document.createElement('div'); dot.className = 'dot' + (i === 1 ? ' active' : ''); dot.onclick = () => goToSlide(i); dotsContainer.appendChild(dot); }
+    function goToSlide(n) {
+        const prev = document.querySelector('.slide.active');
+        const next = document.querySelector(`.slide[data-slide="${n}"]`);
+        if (prev) prev.classList.remove('active');
+        if (next) { next.classList.add('active'); animateSlide(next); }
+        current = n; updateNav();
+    }
+    function changeSlide(dir) { let next = current + dir; if (next < 1) next = total; if (next > total) next = 1; goToSlide(next); }
+    function updateNav() { document.querySelectorAll('.dot').forEach((d, i) => { d.classList.toggle('active', i + 1 === current); }); counter.textContent = current + ' / ' + total; }
+    document.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); changeSlide(1); } if (e.key === 'ArrowLeft') { e.preventDefault(); changeSlide(-1); } });
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+    document.addEventListener('touchend', (e) => { const diff = touchStartX - e.changedTouches[0].clientX; if (Math.abs(diff) > 50) changeSlide(diff > 0 ? 1 : -1); });
+
+    function animateSlide(slide) {
+        slide.querySelectorAll('.reveal').forEach((el, i) => {
+            el.style.transition = 'none'; el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; el.offsetHeight;
+            const delay = i * 0.08;
+            el.style.transition = `opacity 0.35s ease ${delay}s, transform 0.35s ease ${delay}s`;
+            el.style.opacity = '1'; el.style.transform = 'translateY(0px)';
+        });
+        animateSlideEffects(slide);
+    }
+
+    function animateSlideEffects(slide) {
+        slide.querySelectorAll('[data-count]:not(.counted)').forEach(el => {
+            el.classList.add('counted'); const target = parseInt(el.dataset.count); const suffix = el.dataset.suffix || '', prefix = el.dataset.prefix || '';
+            let cur = 0; const step = target / 40;
+            const timer = setInterval(() => { cur += step; if (cur >= target) { cur = target; clearInterval(timer); } el.textContent = prefix + Math.round(cur).toLocaleString() + suffix; }, 30);
+        });
+        slide.querySelectorAll('.bar-chart:not(.bar-init)').forEach(chart => {
+            chart.classList.add('bar-init');
+            chart.querySelectorAll('.bar').forEach((bar, i) => { bar.style.height = '0%'; bar.style.transition = `height 0.5s ease ${i * 0.06}s`; bar.offsetHeight; bar.style.height = bar.dataset.height + '%'; });
+        });
+        slide.querySelectorAll('.donut-ring:not(.ring-init)').forEach(ring => {
+            ring.classList.add('ring-init');
+            ring.style.strokeDashoffset = '251.3'; ring.style.transition = 'stroke-dashoffset 0.8s ease'; ring.offsetHeight; ring.style.strokeDashoffset = 251.3 - (parseInt(ring.dataset.percent) / 100) * 251.3;
+        });
+        slide.querySelectorAll('.bar-fill:not(.fill-init)').forEach((bar, i) => {
+            bar.classList.add('fill-init'); bar.style.width = '0%'; bar.style.transition = `width 0.5s ease ${i * 0.08}s`; bar.offsetHeight; bar.style.width = bar.dataset.width + '%';
+        });
+    }
+
+    document.addEventListener('mousemove', (e) => {
+        const spotlight = document.querySelector('.mouse-spotlight');
+        if (spotlight) { const rgb = getComputedStyle(document.documentElement).getPropertyValue('--glow-color-rgb').trim() || '74,144,196'; spotlight.style.background = `radial-gradient(600px circle at ${e.clientX}px ${e.clientY}px, rgba(${rgb}, 0.06), transparent 40%)`; }
+    });
+
+    (function() {
+        let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+        const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
+        document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+        (function tick() { const ox = (mouseX - cx) / cx, oy = (mouseY - cy) / cy; document.querySelectorAll('.deco-shape').forEach(shape => { const speed = parseFloat(shape.dataset.speed) || 0.03; shape.style.transform = `translate(${ox * speed * 100}px, ${oy * speed * 100}px)`; }); requestAnimationFrame(tick); })();
+    })();
+
+    window.initParticles = function(canvas, options) {
+        if (!canvas) return; const ctx = canvas.getContext('2d'); canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight;
+        const interactive = options.interactive !== false; const count = options.count || (interactive ? 55 : 18);
+        let mx = -1000, my = -1000; const rgb = getComputedStyle(document.documentElement).getPropertyValue('--glow-color-rgb').trim() || '74,144,196';
+        const [r, g, b] = rgb.split(',').map(Number);
+        const particles = Array.from({ length: count }, () => ({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3, size: Math.random() * 2.5 + 0.8, alpha: Math.random() * 0.35 + 0.1 }));
+        if (interactive) { canvas.addEventListener('mousemove', (e) => { const rect = canvas.getBoundingClientRect(); mx = e.clientX - rect.left; my = e.clientY - rect.top; }); canvas.addEventListener('mouseleave', () => { mx = -1000; my = -1000; }); }
+        (function animate() { ctx.clearRect(0, 0, canvas.width, canvas.height); particles.forEach(p => { if (interactive) { const dx = p.x - mx, dy = p.y - my, dist = Math.sqrt(dx * dx + dy * dy); if (dist < 120) { const force = (120 - dist) / 120 * 2; p.vx += (dx / dist) * force * 0.1; p.vy += (dy / dist) * force * 0.1; } } p.vx *= 0.98; p.vy *= 0.98; p.x += p.vx; p.y += p.vy; if (p.x < 0) p.x = canvas.width; if (p.x > canvas.width) p.x = 0; if (p.y < 0) p.y = canvas.height; if (p.y > canvas.height) p.y = 0; ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fillStyle = `rgba(${r},${g},${b},${p.alpha})`; ctx.fill(); }); requestAnimationFrame(animate); })();
+    };
+    document.querySelectorAll('.particle-canvas').forEach(c => window.initParticles(c, { interactive: true, count: 55 }));
+    document.querySelectorAll('.particle-canvas-ambient').forEach(c => window.initParticles(c, { interactive: false, count: 18 }));
+
+    try { animateSlide(document.querySelector('.slide.active')); } catch(e) { console.warn('Initial animation error:', e); }
+</script>
+
+</body>
+</html>
